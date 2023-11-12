@@ -1,67 +1,68 @@
 package pl.aliaksandrou.interviewer.audiointerceptor;
 
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.DataLine;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.Mixer;
-import javax.sound.sampled.SourceDataLine;
-import javax.sound.sampled.TargetDataLine;
+import javax.sound.sampled.*;
+import java.util.Arrays;
 
 public class AudioInterceptor {
 
+    private static final AudioFormat FORMAT = new AudioFormat(44100, 16, 2, true, false);
+
     public void getAudioData() {
         try {
-            // Задаем формат аудиоданных для записи и воспроизведения
-            AudioFormat format = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED,
-                    44100, 16, 2, 4, 44100, false);
+            var mixerInfos = AudioSystem.getMixerInfo();
 
-            // Создаем линию для перехвата аудио данных из микшера
-            DataLine.Info dataLineInfo = new DataLine.Info(TargetDataLine.class, format);
-            Mixer.Info[] mixerInfo = AudioSystem.getMixerInfo();
-            Mixer mixer = null;
+            var blackHole = Arrays.stream(mixerInfos)
+                    .filter(info -> info.getName().equals("BlackHole 2ch"))
+                    .findFirst()
+                    .orElse(null);
 
-            for (Mixer.Info info : mixerInfo) {
-                Mixer currentMixer = AudioSystem.getMixer(info);
-                if (currentMixer.isLineSupported(dataLineInfo)) {
-                    mixer = currentMixer;
-                    break;
-                }
+            if (blackHole == null) {
+                System.err.println("BlackHole 2ch Device not found.");
+                System.exit(1);
             }
 
-            if (mixer == null) {
-                // Не удалось найти подходящий микшер, обработайте эту ситуацию
-                System.out.println("Не удалось найти подходящий микшер.");
-                return;
-            }
+            var mixer = AudioSystem.getMixer(blackHole);
 
-            TargetDataLine targetDataLine = (TargetDataLine) mixer.getLine(dataLineInfo);
-            targetDataLine.open(format);
+            var dataLineInfo = new DataLine.Info(TargetDataLine.class, FORMAT);
+            var targetDataLine = (TargetDataLine) mixer.getLine(dataLineInfo);
+
+            targetDataLine.open(FORMAT);
             targetDataLine.start();
 
-            // Создаем буфер для считывания аудио данных
-            byte[] buffer = new byte[1024];
+            // Create a buffer to store the audio data.
+            var buffer = new byte[1024];
 
-            // Создаем линию для воспроизведения перехваченных аудио данных
-            DataLine.Info sourceDataLineInfo = new DataLine.Info(SourceDataLine.class, format);
-            SourceDataLine sourceDataLine = (SourceDataLine) AudioSystem.getLine(sourceDataLineInfo);
-            sourceDataLine.open(format);
-            sourceDataLine.start();
+            // Read audio data from the target data line.
+            int bytesRead;
+            while ((bytesRead = targetDataLine.read(buffer, 0, buffer.length)) != -1) {
+                // Process the audio data here.
 
-            // Читаем аудио данные из TargetDataLine и отправляем их в сервис распознавания речи
-            while (true) {
-                int bytesRead = targetDataLine.read(buffer, 0, buffer.length);
-                if (bytesRead >= 0) {
-                    System.out.println(bytesRead);
-                    // Здесь вам нужно вызвать API для отправки аудио данных в сервис распознавания речи
-                    // Например:
-                    // SpeechToTextAPI.sendAudioData(buffer, bytesRead);
-                    // В этом примере buffer содержит считанные аудио данные, bytesRead - количество байт, считанных из TargetDataLine
-                    sourceDataLine.write(buffer, 0, bytesRead);
-                }
+                // For example, you could save the audio data to a file:
+                // FileOutputStream fos = new FileOutputStream("audio.wav");
+                // fos.write(buffer, 0, bytesRead);
+                // fos.close();
+
+                // Or, you could use a speech-to-text recognition engine to generate captions for the audio:
+                // SpeechToTextRecognitionEngine engine = new GoogleCloudSpeechToTextRecognitionEngine();
+                // String transcript = engine.transcribe(buffer);
+                // ...
             }
+
+            targetDataLine.close();
+
         } catch (LineUnavailableException e) {
             e.printStackTrace();
         }
     }
+
+//    private void processAudioData(byte[] buffer, int bytesRead) {
+//        // Example: Print the amplitude of each sample
+//        for (int i = 0; i < bytesRead; i += 2) {
+//            short sample = (short) ((buffer[i + 1] << 8) | (buffer[i] & 0xFF));
+//            System.out.println("Amplitude: " + sample);
+//        }
+//
+//        // You can implement your logic for processing the audio data here
+//        // For example, save it to a file, perform analysis, etc.
+//    }
 }
