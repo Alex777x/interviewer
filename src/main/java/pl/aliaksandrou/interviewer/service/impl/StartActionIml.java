@@ -6,10 +6,11 @@ import pl.aliaksandrou.interviewer.service.StartAction;
 
 public class StartActionIml implements StartAction {
 
-    AudioInterceptor audioInterceptor = new AudioInterceptor();
+    private final AudioInterceptor audioInterceptor = new AudioInterceptor();
+
     @Override
     public String start(ActionEvent actionEvent) {
-        audioInterceptor.getAudioData();
+        audioInterceptor.processAudioData();
         return null;
     }
 }

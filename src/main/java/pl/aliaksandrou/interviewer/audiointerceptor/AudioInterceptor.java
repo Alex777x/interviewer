@@ -7,7 +7,7 @@ public class AudioInterceptor {
 
     private static final AudioFormat FORMAT = new AudioFormat(44100, 16, 2, true, false);
 
-    public void getAudioData() {
+    public void processAudioData() {
         try {
             var mixerInfos = AudioSystem.getMixerInfo();
 
@@ -29,10 +29,7 @@ public class AudioInterceptor {
             targetDataLine.open(FORMAT);
             targetDataLine.start();
 
-            // Create a buffer to store the audio data.
             var buffer = new byte[1024];
-
-            // Read audio data from the target data line.
             int bytesRead;
             while ((bytesRead = targetDataLine.read(buffer, 0, buffer.length)) != -1) {
                 // Process the audio data here.
@@ -46,6 +43,7 @@ public class AudioInterceptor {
                 // SpeechToTextRecognitionEngine engine = new GoogleCloudSpeechToTextRecognitionEngine();
                 // String transcript = engine.transcribe(buffer);
                 // ...
+                checkAmplitude(buffer, bytesRead);
             }
 
             targetDataLine.close();
@@ -55,14 +53,11 @@ public class AudioInterceptor {
         }
     }
 
-//    private void processAudioData(byte[] buffer, int bytesRead) {
-//        // Example: Print the amplitude of each sample
-//        for (int i = 0; i < bytesRead; i += 2) {
-//            short sample = (short) ((buffer[i + 1] << 8) | (buffer[i] & 0xFF));
-//            System.out.println("Amplitude: " + sample);
-//        }
-//
-//        // You can implement your logic for processing the audio data here
-//        // For example, save it to a file, perform analysis, etc.
-//    }
+    private void checkAmplitude(byte[] buffer, int bytesRead) {
+        // Example: Print the amplitude of each sample
+        for (int i = 0; i < bytesRead; i += 2) {
+            var sample = ((buffer[i + 1] << 8) | (buffer[i] & 0xFF));
+            System.out.println("Amplitude: " + sample);
+        }
+    }
 }
