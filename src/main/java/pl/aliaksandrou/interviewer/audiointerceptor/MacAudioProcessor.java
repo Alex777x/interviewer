@@ -3,15 +3,16 @@ package pl.aliaksandrou.interviewer.audiointerceptor;
 import javax.sound.sampled.*;
 import java.util.Arrays;
 
-public class AudioInterceptor {
+public class MacAudioProcessor implements AudioProcessor {
 
     private static final AudioFormat FORMAT = new AudioFormat(44100, 16, 2, true, false);
 
-    public void processAudioData() {
+    @Override
+    public void processAudio() {
         try {
-            var mixerInfos = AudioSystem.getMixerInfo();
+            final var mixerInfos = AudioSystem.getMixerInfo();
 
-            var blackHole = Arrays.stream(mixerInfos)
+            final var blackHole = Arrays.stream(mixerInfos)
                     .filter(info -> info.getName().equals("BlackHole 2ch"))
                     .findFirst()
                     .orElse(null);
@@ -21,15 +22,15 @@ public class AudioInterceptor {
                 System.exit(1);
             }
 
-            var mixer = AudioSystem.getMixer(blackHole);
+            final var mixer = AudioSystem.getMixer(blackHole);
 
-            var dataLineInfo = new DataLine.Info(TargetDataLine.class, FORMAT);
-            var targetDataLine = (TargetDataLine) mixer.getLine(dataLineInfo);
+            final var dataLineInfo = new DataLine.Info(TargetDataLine.class, FORMAT);
+            final var targetDataLine = (TargetDataLine) mixer.getLine(dataLineInfo);
 
             targetDataLine.open(FORMAT);
             targetDataLine.start();
 
-            var buffer = new byte[1024];
+            final var buffer = new byte[1024];
             int bytesRead;
             while ((bytesRead = targetDataLine.read(buffer, 0, buffer.length)) != -1) {
                 // Process the audio data here.
@@ -48,15 +49,15 @@ public class AudioInterceptor {
 
             targetDataLine.close();
 
-        } catch (LineUnavailableException e) {
+        } catch (final LineUnavailableException e) {
             e.printStackTrace();
         }
     }
 
-    private void checkAmplitude(byte[] buffer, int bytesRead) {
+    private void checkAmplitude(final byte[] buffer, final int bytesRead) {
         // Example: Print the amplitude of each sample
         for (int i = 0; i < bytesRead; i += 2) {
-            var sample = ((buffer[i + 1] << 8) | (buffer[i] & 0xFF));
+            final var sample = ((buffer[i + 1] << 8) | (buffer[i] & 0xFF));
             System.out.println("Amplitude: " + sample);
         }
     }

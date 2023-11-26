@@ -10,9 +10,9 @@ import java.util.Objects;
 
 public class InterviewerApplication extends Application {
     @Override
-    public void start(Stage stage) throws IOException {
-        var fxmlLoader = new FXMLLoader(InterviewerApplication.class.getResource("main-view.fxml"));
-        var scene = new Scene(fxmlLoader.load(), 800, 600);
+    public void start(final Stage stage) throws IOException {
+        final var fxmlLoader = new FXMLLoader(InterviewerApplication.class.getResource("main-view.fxml"));
+        final var scene = new Scene(fxmlLoader.load(), 1200, 600);
         scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("styles.css")).toExternalForm());
         stage.setTitle("Interviewer");
         stage.setScene(scene);
