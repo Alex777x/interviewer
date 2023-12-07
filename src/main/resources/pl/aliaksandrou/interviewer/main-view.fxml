@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Text?>
 <BorderPane styleClass="main-panel" xmlns:fx="http://javafx.com/fxml"
             fx:controller="pl.aliaksandrou.interviewer.controller.MainController">
-
     <top>
         <VBox>
             <HBox styleClass="buttons-hbox">
@@ -21,18 +19,17 @@
             </HBox>
         </VBox>
     </top>
-
     <center>
         <VBox alignment="CENTER">
             <HBox styleClass="text-pair">
                 <VBox styleClass="text-box" HBox.hgrow="ALWAYS">
-                    <Text fx:id="incomingQuestion"/>
+<!--                    <Text fx:id="incomingQuestion"/>-->
+                    <Label fx:id="incomingQuestion" wrapText="true"/>
                 </VBox>
                 <VBox styleClass="text-box" HBox.hgrow="ALWAYS">
                     <Text fx:id="incomingAnswer"/>
                 </VBox>
             </HBox>
-
             <HBox styleClass="text-pair">
                 <VBox styleClass="text-box" HBox.hgrow="ALWAYS">
                     <Text fx:id="incomingTranslatedQuestion"/>
@@ -43,5 +40,4 @@
             </HBox>
         </VBox>
     </center>
-
 </BorderPane>

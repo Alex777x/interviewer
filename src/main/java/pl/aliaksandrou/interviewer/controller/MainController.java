@@ -4,6 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.text.Text;
 import pl.aliaksandrou.interviewer.enums.AIModel;
 import pl.aliaksandrou.interviewer.enums.Language;
@@ -25,7 +26,8 @@ public class MainController {
     @FXML
     private ComboBox<Language> secondLanguageComboBox;
     @FXML
-    private Text incomingQuestion;
+//    private Text incomingQuestion;
+    private Label incomingQuestion;
     @FXML
     private Text incomingAnswer;
     @FXML
@@ -38,7 +40,9 @@ public class MainController {
 
     @FXML
     public String startButtonClicked(final ActionEvent actionEvent) {
-        return startAction.start(actionEvent);
+        incomingQuestion.setText("Incoming question from the interviewer will be displayed here.");
+        return null;
+//        return startAction.start(actionEvent);
     }
 
     @FXML

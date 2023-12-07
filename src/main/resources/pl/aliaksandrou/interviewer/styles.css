@@ -1,46 +1,48 @@
-.text-box {
-    -fx-background-color: #F5F6F7;
-    -fx-padding: 100px;
-    -fx-border-color: #000000;
-    -fx-border-width: 1px;
-    -fx-border-radius: 5px;
-    -fx-background-radius: 5px;
-}
-
-.button {
-    -fx-background-color: #E5E5E5;
-    -fx-background-radius: 5px;
-    -fx-pref-width: 100px;
-}
-
-.button:hover {
-    -fx-background-color: #D0D0D0;
-}
-
 .combo-box {
     -fx-pref-width: 150px;
 }
-
+.combo-box .arrow {
+    -fx-background-color: #999999;
+}
 .combo-box .arrow-button {
     -fx-background-color: transparent;
 }
 
-.combo-box .arrow {
-    -fx-background-color: #999999;
+.button {
+    -fx-background-color: #E5E5E5;
+    -fx-pref-width: 100px;
+    -fx-background-radius: 5px;
+}
+.button:hover {
+    -fx-background-color: #D0D0D0;
+}
+
+.text-box {
+    -fx-background-color: #F5F6F7;
+    -fx-border-color: #000000;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-padding: 100px;
+}
+
+.text-box Text {
+    -fx-max-width: XXX;
+    -fx-wrap-text: true;
 }
 
 .buttons-hbox {
-    -fx-padding: 10px;
     -fx-alignment: top-right;
     -fx-spacing: 10px;
+    -fx-padding: 10px;
+}
+
+.text-pair {
+    -fx-alignment: center;
+    -fx-spacing: 10px;
+    -fx-padding: 10px;
 }
 
 .main-panel {
     -fx-background-color: #1f2023;
-}
-
-.text-pair {
-    -fx-padding: 10px;
-    -fx-spacing: 10px;
-    -fx-alignment: center;
 }
